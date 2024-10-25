@@ -1,5 +1,5 @@
-from schemas import ContactSchema
-from repositories import BaseRepository
+from py_amo.schemas import ContactSchema
+from py_amo.repositories import BaseRepository
 
 
 class ContactsRepository(BaseRepository[ContactSchema]):

@@ -1,6 +1,6 @@
 import requests
 from .account_manage import AccountManager
-from repositories import PipelinesRepository, LeadsRepository, ContactsRepository, UsersRepository, SourcesRepository
+from py_amo.repositories import PipelinesRepository, LeadsRepository, ContactsRepository, UsersRepository, SourcesRepository
 
 
 class AmoSession(AccountManager):

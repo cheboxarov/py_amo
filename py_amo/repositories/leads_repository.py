@@ -1,4 +1,4 @@
-from schemas import LeadSchema
+from py_amo.schemas import LeadSchema
 from .base_repository import BaseRepository
 
 

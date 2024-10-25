@@ -1,5 +1,6 @@
 from typing import TypeVar, Generic, Optional
-from schemas.entity_link_schema import EntityLinksSchema
+from py_amo.schemas.entity_link_schema import EntityLinksSchema
+from py_amo.services.filters import with_kwargs_filter
 
 T = TypeVar('T')
 
@@ -13,16 +14,22 @@ class BaseRepository(Generic[T]):
         self.entity_type = self.ENTITY_TYPE
         self.schema_class = self.SCHEMA_CLASS
 
-    def get_all(self, params: dict = None) -> list[T]:
-        response = self.session.get(self.base_url, params=params)
+    @with_kwargs_filter
+    def get_all(self, **kwargs) -> list[T]:
+
+        if "with_" in kwargs.keys():
+            kwargs["with"] = kwargs["with_"]
+            del kwargs["with_"]
+        response = self.session.get(self.base_url, params=kwargs)
         response.raise_for_status()
         data = response.json()
         row_entities = data.get("_embedded", {}).get(self.entity_type, [])
         return [self.schema_class(**item) for item in row_entities]
 
-    def get_by_id(self, entity_id: int, params: dict = None) -> Optional[T]:
+    @with_kwargs_filter
+    def get_by_id(self, entity_id: int, **kwargs) -> Optional[T]:
         url = f"{self.base_url}/{entity_id}"
-        response = self.session.get(url, params=params)
+        response = self.session.get(url, params=kwargs)
         if response.status_code in [404, 204]:
             return None
         response.raise_for_status()

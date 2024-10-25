@@ -1,5 +1,4 @@
-import requests
-from schemas import AccountShema
+from py_amo.schemas import AccountShema
 
 
 class AccountManager:

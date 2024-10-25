@@ -1,4 +1,4 @@
-from schemas import PipelineSchema
+from py_amo.schemas import PipelineSchema
 from .base_repository import BaseRepository
 
 

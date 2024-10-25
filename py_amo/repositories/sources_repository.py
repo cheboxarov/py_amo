@@ -1,4 +1,4 @@
-from schemas import SourceSchema
+from py_amo.schemas import SourceSchema
 from .base_repository import BaseRepository
 
 
