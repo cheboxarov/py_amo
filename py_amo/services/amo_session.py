@@ -1,6 +1,6 @@
 import requests
 from .account_manage import AccountManager
-from py_amo.repositories import PipelinesRepository, LeadsRepository, ContactsRepository, UsersRepository, SourcesRepository
+from py_amo.repositories import PipelinesRepository, LeadsRepository, ContactsRepository, UsersRepository, SourcesRepository, PipelineStatusesRepository
 
 
 class AmoSession(AccountManager):
@@ -38,3 +38,6 @@ class AmoSession(AccountManager):
     @property
     def sources(self):
         return SourcesRepository(self)
+    
+    def pipeline_statuses(self, pipeline_id: int):
+        return PipelineStatusesRepository(pipeline_id, self)

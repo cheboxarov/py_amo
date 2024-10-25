@@ -7,3 +7,4 @@ class LeadsRepository(BaseRepository[LeadSchema]):
     REPOSITORY_PATH = "/api/v4/leads"
     ENTITY_TYPE = "leads"
     SCHEMA_CLASS = LeadSchema
+    SCHEMA_INPUT_CLASS = LeadSchema

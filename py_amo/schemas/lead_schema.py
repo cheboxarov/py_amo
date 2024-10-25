@@ -23,4 +23,4 @@ class LeadSchema(BaseModel):
     custom_fields_values: Optional[list[CustomFieldShema]] = None
     score: Optional[int] = None
     account_id: Optional[int] = None
-    embedded: Optional[dict] = Field(alias="_embedded")
+    embedded: Optional[dict] = Field(alias="_embedded", default=None)

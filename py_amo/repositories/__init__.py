@@ -4,3 +4,4 @@ from .contacts_repository import ContactsRepository
 from .pipelines_repository import PipelinesRepository
 from .users_repository import UsersRepository
 from .sources_repository import SourcesRepository
+from .statuses_repository import PipelineStatusesRepository

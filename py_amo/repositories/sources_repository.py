@@ -7,3 +7,4 @@ class SourcesRepository(BaseRepository[SourceSchema]):
     REPOSITORY_PATH = "/api/v4/sources"
     ENTITY_TYPE = "sources"
     SCHEMA_CLASS = SourceSchema
+    SCHEMA_INPUT_CLASS = SourceSchema
