@@ -4,6 +4,8 @@ from py_amo.schemas.created_entity_schema import CreatedEntity
 from py_amo.services.filters import with_kwargs_filter
 import json
 import httpx
+from py_amo.utils.async_utils import repository_safe_request
+import asyncio
 
 T = TypeVar('T')
 
@@ -17,6 +19,8 @@ class BaseAsyncRepository(Generic[T]):
         self.entity_type = self.ENTITY_TYPE
         self.schema_class = self.SCHEMA_CLASS
         self.schema_input_class = self.SCHEMA_INPUT_CLASS
+        self.subdomain = session.get_subdomain()
+        self.amo_session = session
 
     def get_base_url(self) -> str:
         return self.base_url
@@ -32,6 +36,24 @@ class BaseAsyncRepository(Generic[T]):
         - with_: str (Смотреть в документации)
         - offset: int
         """
+
+        if (limit := kwargs.get("limit", 0)) > 250:
+            def divide_number(number, max_value):
+                parts = []
+                while number > 0:
+                    part = min(max_value, number)
+                    parts.append(part)
+                    number -= part
+                return parts
+            
+            kwargs.pop("limit")
+            semaphore = asyncio.Semaphore(7)
+            result = await asyncio.gather(*(repository_safe_request(self.get_all, semaphore, i, **kwargs, page=i, limit=chunk_limit) for i, chunk_limit in enumerate(divide_number(limit,250))))
+            entities = []
+            for chunk_entities in result:
+                entities += chunk_entities
+            return entities
+        
         response = await self.session.get(self.get_base_url(), params=kwargs)
         response.raise_for_status()
         data = response.json()

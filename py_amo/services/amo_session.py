@@ -19,6 +19,9 @@ class BaseAmoSession(AccountManager):
     def get_url(self):
         return f"https://{self.subdomain}.amocrm.ru"
     
+    def get_subdomain(self):
+        return self.subdomain
+    
 
 
 class AmoSession(BaseAmoSession):
@@ -54,6 +57,10 @@ class AmoSession(BaseAmoSession):
         return PipelineStatusesRepository(pipeline_id, self)
 
 class AsyncAmoSession(BaseAmoSession):
+
+    """
+    Будьте аккуратны с асинхронным клиентом! Не забывайте про ограничения кол-ва запросов в секунду со стороны амо!
+    """
 
     def __init__(self, token, subdomain):
         super().__init__(token, subdomain)

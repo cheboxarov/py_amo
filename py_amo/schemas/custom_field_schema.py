@@ -12,5 +12,5 @@ class CustomFieldShema(BaseModel):
     field_name: Optional[str] = None
     field_code: Optional[str] = None
     field_type: Optional[str] = None
-    values: Optional[list[dict]] = None
+    values: Optional[list[CustomFieldValues]] = None
     account_id: Optional[int] = None

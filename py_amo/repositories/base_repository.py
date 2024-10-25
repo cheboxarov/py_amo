@@ -17,6 +17,7 @@ class BaseRepository(Generic[T]):
         self.entity_type = self.ENTITY_TYPE
         self.schema_class = self.SCHEMA_CLASS
         self.schema_input_class = self.SCHEMA_INPUT_CLASS
+        self.subdomain = session.get_subdomain()
 
     def get_base_url(self) -> str:
         return self.base_url
