@@ -7,7 +7,8 @@ import httpx
 from py_amo.utils.async_utils import repository_safe_request
 import asyncio
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 class BaseAsyncRepository(Generic[T]):
     def __init__(self, session):
@@ -38,6 +39,7 @@ class BaseAsyncRepository(Generic[T]):
         """
 
         if (limit := kwargs.get("limit", 0)) > 250:
+
             def divide_number(number, max_value):
                 parts = []
                 while number > 0:
@@ -45,15 +47,22 @@ class BaseAsyncRepository(Generic[T]):
                     parts.append(part)
                     number -= part
                 return parts
-            
+
             kwargs.pop("limit")
             semaphore = asyncio.Semaphore(7)
-            result = await asyncio.gather(*(repository_safe_request(self.get_all, semaphore, i, **kwargs, page=i, limit=chunk_limit) for i, chunk_limit in enumerate(divide_number(limit,250))))
+            result = await asyncio.gather(
+                *(
+                    repository_safe_request(
+                        self.get_all, semaphore, i, **kwargs, page=i, limit=chunk_limit
+                    )
+                    for i, chunk_limit in enumerate(divide_number(limit, 250))
+                )
+            )
             entities = []
             for chunk_entities in result:
                 entities += chunk_entities
             return entities
-        
+
         response = await self.session.get(self.get_base_url(), params=kwargs)
         response.raise_for_status()
         data = response.json()
@@ -81,7 +90,7 @@ class BaseAsyncRepository(Generic[T]):
             CreatedEntity(
                 id=created_entity.get("id"),
                 entity_type=self.entity_type,
-                link=created_entity.get("_links", {}).get("self", {}).get("href")
+                link=created_entity.get("_links", {}).get("self", {}).get("href"),
             )
             for created_entity in response.json().get("_embedded", {}).get("leads", [])
         ]
@@ -92,7 +101,7 @@ class BaseAsyncRepository(Generic[T]):
         entity_id = entity_data.pop("id", None)
         if entity_id is None:
             raise ValueError("entity needs an id")
-        
+
         update_data = self.schema_input_class(**entity_data).dict(exclude_none=True)
         url = f"{self.get_base_url()}/{entity_id}"
         response = await self.session.patch(url, json=update_data)
@@ -108,7 +117,12 @@ class BaseAsyncRepository(Generic[T]):
         """
         Доступно только для leads, contacts, companies, customers!
         """
-        if self.get_entity_type() not in ["leads", "contacts", "companies", "customers"]:
+        if self.get_entity_type() not in [
+            "leads",
+            "contacts",
+            "companies",
+            "customers",
+        ]:
             raise ValueError("Can't get links from this entity!")
 
         url = f"{self.get_base_url()}/{entity_id}/links"

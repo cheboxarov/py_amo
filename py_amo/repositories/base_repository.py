@@ -4,7 +4,8 @@ from py_amo.schemas.created_entity_schema import CreatedEntity
 from py_amo.services.filters import with_kwargs_filter
 import json
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 class BaseRepository(Generic[T]):
     def __init__(self, session):
@@ -13,7 +14,7 @@ class BaseRepository(Generic[T]):
 
         """
         self.session = session.get_requests_session()
-        self.base_url = session.get_url()+self.REPOSITORY_PATH
+        self.base_url = session.get_url() + self.REPOSITORY_PATH
         self.entity_type = self.ENTITY_TYPE
         self.schema_class = self.SCHEMA_CLASS
         self.schema_input_class = self.SCHEMA_INPUT_CLASS
@@ -27,7 +28,6 @@ class BaseRepository(Generic[T]):
 
     @with_kwargs_filter
     def get_all(self, **kwargs) -> list[T]:
-
         """
         kwargs:
 
@@ -46,7 +46,6 @@ class BaseRepository(Generic[T]):
 
     @with_kwargs_filter
     def get_by_id(self, entity_id: int, **kwargs) -> Optional[T]:
-
         """
         kwargs:
 
@@ -64,13 +63,19 @@ class BaseRepository(Generic[T]):
         return self.schema_class(**response.json())
 
     def create(self, entities: list[T]) -> list[CreatedEntity]:
-        response = self.session.post(self.get_base_url(), data=json.dumps([entity.dict(exclude_none=True) for entity in entities]))
+        response = self.session.post(
+            self.get_base_url(),
+            data=json.dumps([entity.dict(exclude_none=True) for entity in entities]),
+        )
         response.raise_for_status()
-        created_ids = [CreatedEntity(id=created_lead.get("id", None),
-                                     entity_type=self.entity_type,
-                                     link=created_lead.get("_links", {}).get("self", {}).get("href"))
-                       for created_lead in 
-                       response.json().get("_embedded", {}).get("leads", [])]
+        created_ids = [
+            CreatedEntity(
+                id=created_lead.get("id", None),
+                entity_type=self.entity_type,
+                link=created_lead.get("_links", {}).get("self", {}).get("href"),
+            )
+            for created_lead in response.json().get("_embedded", {}).get("leads", [])
+        ]
         return created_ids
 
     def update(self, entity: T) -> T:
@@ -79,8 +84,9 @@ class BaseRepository(Generic[T]):
         if entity_id is None:
             raise ValueError("entity need id")
         update_data = self.schema_input_class(**entity_data).dict(exclude_none=True)
-        response = self.session.patch(self.get_base_url()+f"/{entity_id}", 
-                                      json=update_data)
+        response = self.session.patch(
+            self.get_base_url() + f"/{entity_id}", json=update_data
+        )
         response.raise_for_status()
         return self.schema_class(**response.json())
 
@@ -90,14 +96,18 @@ class BaseRepository(Generic[T]):
         response.raise_for_status()
 
     def links(self, entity_id: int):
-
         """
 
         Доступно только для leads, contacts, companies, customers!
 
         """
 
-        if not self.get_entity_type() in ["leads", "contacts", "companies", "customers"]:
+        if not self.get_entity_type() in [
+            "leads",
+            "contacts",
+            "companies",
+            "customers",
+        ]:
             raise ValueError(f"cant get links from this entity!")
         url = f"{self.get_base_url()}/{entity_id}/links"
         response = self.session.get(url)

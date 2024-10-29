@@ -7,6 +7,7 @@ class CustomFieldValues(BaseModel):
     enum_id: Optional[int] = None
     enum_code: Optional[str] = None
 
+
 class CustomFieldShema(BaseModel):
     field_id: Optional[int] = None
     field_name: Optional[str] = None

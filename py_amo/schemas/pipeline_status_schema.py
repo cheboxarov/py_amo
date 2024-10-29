@@ -1,6 +1,7 @@
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
+
 class PipelineStatusDescriptionSchema(BaseModel):
     id: Optional[int] = None
     account_id: Optional[int] = None

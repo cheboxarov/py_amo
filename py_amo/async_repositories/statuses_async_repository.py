@@ -12,6 +12,6 @@ class PipelineStatusesAsyncRepository(BaseAsyncRepository[PipelineStatusSchema])
     def __init__(self, pipeline_id: int, *args, **kwargs):
         self.pipeline_id = pipeline_id
         super().__init__(*args, **kwargs)
-    
+
     def get_base_url(self):
         return super().get_base_url().format(self.pipeline_id)

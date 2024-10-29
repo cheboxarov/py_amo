@@ -18,7 +18,7 @@ class LeadSchema(BaseModel):
     closed_at: Optional[int] = None
     created_at: Optional[int] = None
     updated_at: Optional[int] = None
-    closest_task_at: Optional[int] = None 
+    closest_task_at: Optional[int] = None
     is_deleted: Optional[bool] = None
     custom_fields_values: Optional[list[CustomFieldShema]] = None
     score: Optional[int] = None
