@@ -1,3 +1,5 @@
 test.py
 __pycache__
 .venv
+*.egg-info
+dist

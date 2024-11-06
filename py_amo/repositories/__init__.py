@@ -5,3 +5,4 @@ from .pipelines_repository import PipelinesRepository
 from .users_repository import UsersRepository
 from .sources_repository import SourcesRepository
 from .statuses_repository import PipelineStatusesRepository
+from .companies_repository import CompaniesRepository

@@ -8,6 +8,7 @@ from py_amo.repositories import (
     UsersRepository,
     SourcesRepository,
     PipelineStatusesRepository,
+    CompaniesRepository
 )
 from py_amo.async_repositories import (
     PipelinesAsyncRepository,
@@ -16,6 +17,7 @@ from py_amo.async_repositories import (
     UsersAsyncRepository,
     SourcesAsyncRepository,
     PipelineStatusesAsyncRepository,
+    CompaniesAsyncRepository
 )
 
 
@@ -61,6 +63,10 @@ class AmoSession(BaseAmoSession):
     @property
     def sources(self):
         return SourcesRepository(self)
+    
+    @property
+    def companies(self):
+        return CompaniesRepository(self)
 
     def pipeline_statuses(self, pipeline_id: int):
         return PipelineStatusesRepository(pipeline_id, self)
@@ -73,7 +79,7 @@ class AsyncAmoSession(BaseAmoSession):
 
     def __init__(self, token, subdomain):
         super().__init__(token, subdomain)
-        self.async_session = httpx.AsyncClient(headers=self.get_headers(), timeout=5)
+        self.async_session = httpx.AsyncClient(headers=self.get_headers(), timeout=30)
 
     def get_async_session(self):
         return self.async_session
@@ -97,6 +103,10 @@ class AsyncAmoSession(BaseAmoSession):
     @property
     def sources(self):
         return SourcesAsyncRepository(self)
+    
+    @property
+    def companies(self):
+        return CompaniesAsyncRepository(self)
 
     def pipeline_statuses(self, pipeline_id: int):
         return PipelineStatusesAsyncRepository(pipeline_id, self)
