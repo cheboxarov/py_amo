@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class CustomFieldValues(BaseModel):
-    value: Optional[str] = None
+    value: Optional[str | int] = None
     enum_id: Optional[int] = None
     enum_code: Optional[str] = None
 

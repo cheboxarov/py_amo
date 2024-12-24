@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="py-amo-client",        # Имя вашего пакета
-    version="0.1.2",
+    version="0.1.4",
     author="cheboxarov",
     author_email="lalakasuper2@gmail.com",
     description="Api client for amoCRM",

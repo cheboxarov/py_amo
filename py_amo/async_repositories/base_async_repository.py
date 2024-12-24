@@ -53,7 +53,7 @@ class BaseAsyncRepository(Generic[T]):
             result = await asyncio.gather(
                 *(
                     repository_safe_request(
-                        self.get_all, semaphore, i, **kwargs, page=i, limit=chunk_limit
+                        self.get_all, semaphore, i, **kwargs, page=i+1, limit=chunk_limit
                     )
                     for i, chunk_limit in enumerate(divide_number(limit, 250))
                 )
