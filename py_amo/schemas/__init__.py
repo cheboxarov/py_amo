@@ -7,3 +7,6 @@ from .user_schema import UserSchema
 from .source_shema import SourceSchema
 from .pipeline_status_schema import PipelineStatusSchema, PipelineStatusInputSchema
 from .company_schema import CompanySchema
+from .task_schema import TaskSchema, TaskInputSchema, TaskTypeSchema
+from .note_schema import NoteSchema, NoteInputSchema
+from .event_schema import EventSchema, EventValueAfterSchema, EventValueBeforeSchema
